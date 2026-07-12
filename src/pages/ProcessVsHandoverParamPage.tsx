@@ -14,6 +14,7 @@ export default function ProcessVsHandoverParamPage({ rows, weeks }: { rows: Hand
   const avgB12A = avg(rows.map((h) => h.before12amProcessed.a));
   const avg4B = avg(rows.map((h) => h.fourthSlotRatio.b));
   const avg4A = avg(rows.map((h) => h.fourthSlotRatio.a));
+  console.log(rows)
 
   const donutA = [{ name: "Achieved", value: achA, color: CHART_COLORS.green }, { name: "Std. Fail", value: rows.length - achA, color: CHART_COLORS.red }];
   const donutB = [{ name: "Achieved", value: achB, color: CHART_COLORS.green }, { name: "Std. Fail", value: failB, color: CHART_COLORS.red }];
@@ -105,11 +106,12 @@ export default function ProcessVsHandoverParamPage({ rows, weeks }: { rows: Hand
             <td className={th}>Hub Name</td>
 
             <td className={th}>B12AM</td><td className={th}>4th HO</td><td className={th}>Status</td><td className={th}>Results</td>
-            <td className={th}>B12AM</td><td className={th}>4th HO</td><td className={th}>Status</td><td className={th}>Gap</td>
+            <td className={th}>B12AM</td><td className={th}>4th HO</td><td className={th}>Status</td><td className={th}>Results</td>
             <td className={th}>{wA}</td><td className={th}>{wB}</td><td className={th}>Results</td>
           </tr>
           {rows.map((h) => {
-            const db = h.before12amProcessed.b - h.before12amProcessed.a;
+            const wA = h.before12amProcessed.a - h.fourthSlotHandover.a;
+            const wB = h.before12amProcessed.b - h.fourthSlotHandover.b;
             const d4 = h.fourthSlotRatio.b - h.fourthSlotRatio.a;
             return (
               <tr key={h.hub} className="hover:bg-slate-800/30 transition-colors">
@@ -117,11 +119,11 @@ export default function ProcessVsHandoverParamPage({ rows, weeks }: { rows: Hand
                 <td className={td}>{h.before12amProcessed.a.toFixed(2)}%</td>
                 <td className={td}>{h.fourthSlotHandover.a.toFixed(2)}%</td>
                 <td className={td}><StatusPill status={h.statusA} /></td>
-                <td className={td}><DeltaBadge value={-db} /></td>
-                <td className={`${td} font-medium text-slate-100`}>{h.before12amProcessed.b.toFixed(2)}%</td>
+                <td className={td}><DeltaBadge value={-wA} /></td>
+                <td className={`${td} font-medium text-slate-100`}>{h.before12amProcessed.b.toFixed(4)}%</td>
                 <td className={`${td} font-medium text-slate-100`}>{h.fourthSlotHandover.b.toFixed(2)}%</td>
-                <td className={td}><StatusPill status={h.statusB} /></td>
-                <td className={td}><DeltaBadge value={db} /></td>
+                <td className={td}><StatusPill status={h.statusA} /></td>
+                <td className={td}><DeltaBadge value={-wB} /></td>
                 <td className={td}>{h.fourthSlotRatio.a.toFixed(2)}%</td>
                 <td className={`${td} font-medium text-slate-100`}>{h.fourthSlotRatio.b.toFixed(2)}%</td>
                 <td className={td}><DeltaBadge value={d4} /></td>
